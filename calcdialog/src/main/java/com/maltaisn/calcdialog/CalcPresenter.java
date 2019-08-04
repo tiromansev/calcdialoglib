@@ -17,14 +17,14 @@
 package com.maltaisn.calcdialog;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 class CalcPresenter {
 

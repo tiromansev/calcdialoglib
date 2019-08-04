@@ -17,6 +17,10 @@
 package com.maltaisn.calcdialoglib;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -31,10 +35,6 @@ import com.maltaisn.calcdialog.CalcNumpadLayout;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity implements CalcDialog.CalcDialogCallback {
 

@@ -19,13 +19,12 @@ package com.maltaisn.calcdialog;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * Settings for the calculator dialog.
@@ -35,7 +34,8 @@ public class CalcSettings implements Parcelable {
     int requestCode = 0;
 
     // Appearance settings
-    @NonNull NumberFormat nbFormat = NumberFormat.getInstance();
+    @NonNull
+    NumberFormat nbFormat = NumberFormat.getInstance();
     int maxIntDigits = 10;
 
     @NonNull CalcNumpadLayout numpadLayout = CalcNumpadLayout.CALCULATOR;
@@ -47,7 +47,8 @@ public class CalcSettings implements Parcelable {
     boolean shouldEvaluateOnOperation = false;
 
     // Behavior settings
-    @Nullable BigDecimal initialValue = null;
+    @Nullable
+    BigDecimal initialValue = null;
     @Nullable BigDecimal minValue = new BigDecimal("-1E10");
     @Nullable BigDecimal maxValue = new BigDecimal("1E10");
     boolean isOrderOfOperationsApplied = true;

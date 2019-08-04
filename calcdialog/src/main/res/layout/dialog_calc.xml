@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -37,7 +37,7 @@
         tools:visibility="visible"
         >
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/calc_txv_expression"
             style="?attr/calcExpressionStyle"
             android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
 
     </HorizontalScrollView>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@+id/calc_txv_value"
         style="?attr/calcValueStyle"
         android:layout_width="0dp"
@@ -386,7 +386,7 @@
         app:layout_constraintVertical_bias="0.0"
         />
 
-    <androidx.constraintlayout.widget.Guideline
+    <android.support.constraint.Guideline
         android:id="@+id/calc_guideline_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -394,7 +394,7 @@
         app:layout_constraintGuide_percent="0.27"
         />
 
-    <androidx.constraintlayout.widget.Guideline
+    <android.support.constraint.Guideline
         android:id="@+id/calc_guideline_middle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -402,7 +402,7 @@
         app:layout_constraintGuide_percent="0.54"
         />
 
-    <androidx.constraintlayout.widget.Guideline
+    <android.support.constraint.Guideline
         android:id="@+id/calc_guideline_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -410,4 +410,4 @@
         app:layout_constraintGuide_percent="0.8"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
