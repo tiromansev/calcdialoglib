@@ -73,7 +73,11 @@ public class CalcDialog extends AppCompatDialogFragment {
     private CharSequence[] btnTexts;
     private CharSequence[] errorMessages;
     private int[] maxDialogDimensions;
+    private CalcDialogCallback calcDialogCallback;
 
+    public void setCalcDialogCallback(CalcDialogCallback calcDialogCallback) {
+        this.calcDialogCallback = calcDialogCallback;
+    }
 
     ////////// LIFECYCLE METHODS //////////
     @Override
@@ -308,6 +312,10 @@ public class CalcDialog extends AppCompatDialogFragment {
 
     @Nullable
     private CalcDialogCallback getCallback() {
+        if (calcDialogCallback != null) {
+            return calcDialogCallback;
+        }
+
         CalcDialogCallback cb = null;
         if (getParentFragment() != null) {
             try {
