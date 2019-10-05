@@ -227,7 +227,7 @@ public class CalcDialog extends AppCompatDialogFragment {
         });
 
         // Dialog buttons
-        Button clearBtn = view.findViewById(R.id.calc_btn_clear);
+        clearBtn = view.findViewById(R.id.calc_btn_clear);
         clearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,7 +235,7 @@ public class CalcDialog extends AppCompatDialogFragment {
             }
         });
 
-        Button cancelBtn = view.findViewById(R.id.calc_btn_cancel);
+        cancelBtn = view.findViewById(R.id.calc_btn_cancel);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,7 +243,7 @@ public class CalcDialog extends AppCompatDialogFragment {
             }
         });
 
-        Button okBtn = view.findViewById(R.id.calc_btn_ok);
+        okBtn = view.findViewById(R.id.calc_btn_ok);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
