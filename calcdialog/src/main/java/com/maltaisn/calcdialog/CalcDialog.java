@@ -235,8 +235,8 @@ public class CalcDialog extends AppCompatDialogFragment {
 
         // Dialog buttons
         Button clearBtn = view.findViewById(R.id.calc_btn_clear);
-        clearBtn.setBackgroundColor(view.getResources().getColor(buttonBackgroundColor));
-        clearBtn.setTextColor(view.getResources().getColor(buttonTextColor));
+        clearBtn.setBackgroundColor(buttonBackgroundColor);
+        clearBtn.setTextColor(buttonTextColor);
         clearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,8 +245,8 @@ public class CalcDialog extends AppCompatDialogFragment {
         });
 
         Button cancelBtn = view.findViewById(R.id.calc_btn_cancel);
-        cancelBtn.setBackgroundColor(view.getResources().getColor(buttonBackgroundColor));
-        cancelBtn.setTextColor(view.getResources().getColor(buttonTextColor));
+        cancelBtn.setBackgroundColor(buttonBackgroundColor);
+        cancelBtn.setTextColor(buttonTextColor);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,8 +255,8 @@ public class CalcDialog extends AppCompatDialogFragment {
         });
 
         Button okBtn = view.findViewById(R.id.calc_btn_ok);
-        okBtn.setBackgroundColor(view.getResources().getColor(buttonBackgroundColor));
-        okBtn.setTextColor(view.getResources().getColor(buttonTextColor));
+        okBtn.setBackgroundColor(buttonBackgroundColor);
+        okBtn.setTextColor(buttonTextColor);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
