@@ -341,7 +341,6 @@
 
     <Button
         android:id="@+id/calc_btn_clear"
-        style="?attr/calcDialogButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -375,7 +374,6 @@
 
     <Button
         android:id="@+id/calc_btn_ok"
-        style="?attr/calcDialogButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
