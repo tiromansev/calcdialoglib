@@ -75,12 +75,19 @@ public class CalcDialog extends AppCompatDialogFragment {
     private int[] maxDialogDimensions;
     private CalcDialogCallback calcDialogCallback;
 
-    public Button clearBtn;
-    public Button cancelBtn;
-    public Button okBtn;
+    private int buttonBackgroundColor;
+    private int buttonTextColor;
 
     public void setCalcDialogCallback(CalcDialogCallback calcDialogCallback) {
         this.calcDialogCallback = calcDialogCallback;
+    }
+
+    public void setButtonBackgroundColor(int buttonBackgroundColor) {
+        this.buttonBackgroundColor = buttonBackgroundColor;
+    }
+
+    public void setButtonTextColor(int buttonTextColor) {
+        this.buttonTextColor = buttonTextColor;
     }
 
     ////////// LIFECYCLE METHODS //////////
@@ -227,7 +234,9 @@ public class CalcDialog extends AppCompatDialogFragment {
         });
 
         // Dialog buttons
-        clearBtn = view.findViewById(R.id.calc_btn_clear);
+        Button clearBtn = view.findViewById(R.id.calc_btn_clear);
+        clearBtn.setBackgroundColor(view.getResources().getColor(buttonBackgroundColor));
+        clearBtn.setTextColor(view.getResources().getColor(buttonTextColor));
         clearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,7 +244,9 @@ public class CalcDialog extends AppCompatDialogFragment {
             }
         });
 
-        cancelBtn = view.findViewById(R.id.calc_btn_cancel);
+        Button cancelBtn = view.findViewById(R.id.calc_btn_cancel);
+        cancelBtn.setBackgroundColor(view.getResources().getColor(buttonBackgroundColor));
+        cancelBtn.setTextColor(view.getResources().getColor(buttonTextColor));
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,7 +254,9 @@ public class CalcDialog extends AppCompatDialogFragment {
             }
         });
 
-        okBtn = view.findViewById(R.id.calc_btn_ok);
+        Button okBtn = view.findViewById(R.id.calc_btn_ok);
+        okBtn.setBackgroundColor(view.getResources().getColor(buttonBackgroundColor));
+        okBtn.setTextColor(view.getResources().getColor(buttonTextColor));
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
