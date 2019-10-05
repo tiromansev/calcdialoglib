@@ -75,6 +75,10 @@ public class CalcDialog extends AppCompatDialogFragment {
     private int[] maxDialogDimensions;
     private CalcDialogCallback calcDialogCallback;
 
+    public Button clearBtn;
+    public Button cancelBtn;
+    public Button okBtn;
+
     public void setCalcDialogCallback(CalcDialogCallback calcDialogCallback) {
         this.calcDialogCallback = calcDialogCallback;
     }
