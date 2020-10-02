@@ -73,6 +73,11 @@ public class CalcDialog extends AppCompatDialogFragment {
     private TextView signBtn;
 
     private CharSequence[] errorMessages;
+    private CalcDialogCallback calcDialogCallback;
+
+    public void setCalcDialogCallback(CalcDialogCallback calcDialogCallback) {
+        this.calcDialogCallback = calcDialogCallback;
+    }
 
     ////////// LIFECYCLE METHODS //////////
     @Override
@@ -339,6 +344,10 @@ public class CalcDialog extends AppCompatDialogFragment {
 
     @Nullable
     private CalcDialogCallback getCallback() {
+        if (calcDialogCallback != null) {
+            return calcDialogCallback;
+        }
+
         CalcDialogCallback cb = null;
         if (getParentFragment() != null) {
             try {
