@@ -1,3 +1,33 @@
+### v2.2.1
+- Fixed NPE when erasing after presenter is detached. (#28)
+
+## v2.2.0
+- Google's Material Components now used for UI.
+- Lowered min SDK to 14.
+- Added content description for the erase button.
+- Initial value can now be negated. Previous behavior was to clear the value.
+- Breaking changes in styling attributes:
+    - Removed `calcHeaderStyle` and `calcHeaderElevationDrawable` attributes, they were replaced
+        by `calcHeaderColor` and `calcHeaderElevationColor`. Note that the latter only applies to
+        APIs below 21, otherwise default elevation color is used.
+    - Renamed `calcNumberBtnStyle` to `calcDigitBtnStyle`, `calcNumberBtnColor` to `calcDigitBtnColor`,
+      and `calcDialogSepColor` to `calcDividerColor`.
+- Fixed crashes due to NumberFormat deserialization bug during unparcelization.
+
+### v2.1.2
+- Fixed many NPE on some devices.
+- Fixed `Expression` parcel implementation.
+
+### v2.1.1
+- Disabled RTL layout in dialog.
+
+## v2.1.0
+- Added Hebrew translation.
+
+### v2.0.1
+- Fixed crash in writeToParcel on Android 5.0 with RTL language (#21).
+- Japenese translation improvements.
+
 # v2.0.0
 - Changed package name to `com.maltaisn.calcdialoglib`.
 - To change the dialog settings, `CalcDialog.getSettings()` must now be used.
