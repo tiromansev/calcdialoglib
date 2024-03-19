@@ -204,13 +204,12 @@
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="spread_inside" />
 
-    <ImageView
+    <TextView
         android:id="@+id/calc_btn_percent"
         style="?attr/calcDigitBtnStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="center"
-        android:src="@drawable/baseline_percent_24"
+        android:text="%"
         app:layout_constraintBottom_toTopOf="@id/calc_btn_11"
         app:layout_constraintEnd_toStartOf="@+id/calc_guideline_end"
         app:layout_constraintStart_toEndOf="@+id/calc_btn_backspace"
