@@ -39,7 +39,9 @@ class CalcPresenter {
     private CalcSettings settings;
     private NumberFormat nbFormat;
 
-    /** The typed expression. */
+    /**
+     * The typed expression.
+     */
     @NonNull
     private Expression expression = new Expression();
 
@@ -50,7 +52,9 @@ class CalcPresenter {
     @Nullable
     private BigDecimal currentValue;
 
-    /** The last evaluated result, null for none. */
+    /**
+     * The last evaluated result, null for none.
+     */
     @Nullable
     private BigDecimal resultValue;
 
@@ -61,13 +65,19 @@ class CalcPresenter {
      */
     private int currentValueScale;
 
-    /** If there's an error, the error code. */
+    /**
+     * If there's an error, the error code.
+     */
     private int errorCode;
 
-    /** Whether {@link #currentValue} is from the answer button. */
+    /**
+     * Whether {@link #currentValue} is from the answer button.
+     */
     private boolean currentIsAnswer;
 
-    /** Whether {@link #currentValue} is the result from the equal button. */
+    /**
+     * Whether {@link #currentValue} is the result from the equal button.
+     */
     private boolean currentIsResult;
 
     /**
@@ -224,27 +234,67 @@ class CalcPresenter {
         currentIsResult = false;
         currentValueScale = -1;
 
-        if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
-            // Undo previous operator button click if the current value is the
-            // result of the expression calculated on the last button click.
-            expression.operators.set(expression.operators.size() - 1, operator);
+        if (operator == Expression.Operator.PERCENT) {
+            if (currentValue != null) {
+                if (!expression.operators.isEmpty() && !expression.numbers.isEmpty()) {
+                    Expression.Operator lastOperator = expression.operators.get(expression.operators.size() - 1);
+                    BigDecimal last = currentValue;
+                    calculate();
 
-        } else {
-            if (currentValue == null) {
-                currentValue = BigDecimal.ZERO;
+                    switch (lastOperator) {
+                        case ADD:
+                            currentValue = currentValue.add(last.multiply(currentValue.divide(BigDecimal.valueOf(100), scale(), rm())));
+                            break;
+                        case SUBTRACT:
+                            currentValue = currentValue.subtract(currentValue.multiply(last.divide(BigDecimal.valueOf(100), scale(), rm())));
+                            break;
+                        case MULTIPLY:
+                            currentValue = last.multiply(currentValue.divide(BigDecimal.valueOf(100), scale(), rm()));
+                            break;
+                        case DIVIDE:
+                            currentValue = currentValue.divide(last.divide(BigDecimal.valueOf(100), scale(), rm()), scale(), rm());
+                            break;
+                    }
+                } else {
+                    currentValue = currentValue.divide(BigDecimal.valueOf(100), scale(), rm());
+                }
+
+                canEditCurrentValue = true;
+                canEditExpression = false;
+                clearExpressionIfNeeded();
+                updateCurrentValue();
+                onEqualBtnClicked();
+                return;
             }
-            expression.numbers.add(currentValue);
-            calculate();
-            expression.operators.add(operator);
+        } else {
+            if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
+                expression.operators.set(expression.operators.size() - 1, operator);
+            } else {
+                if (currentValue == null) {
+                    currentValue = BigDecimal.ZERO;
+                }
+                expression.numbers.add(currentValue);
+                calculate();
+                expression.operators.add(operator);
 
-            if (!settings.shouldEvaluateOnOperation) {
-                currentValue = null;
+                if (!settings.shouldEvaluateOnOperation) {
+                    currentValue = null;
+                }
             }
         }
 
         view.setAnswerBtnVisible(settings.isAnswerBtnShown && resultValue != null);
         updateCurrentValue();
         updateExpression();
+    }
+
+    @NonNull
+    private RoundingMode rm() {
+        return nbFormat.getRoundingMode();
+    }
+
+    private int scale() {
+        return settings.nbFormat.getMaximumFractionDigits();
     }
 
     void onDecimalSepBtnClicked() {
@@ -464,12 +514,15 @@ class CalcPresenter {
     }
 
     private void updateCurrentValue() {
+        updateCurrentValue(currentValue);
+    }
+
+    private void updateCurrentValue(BigDecimal value) {
         if (currentIsAnswer) {
             view.showAnswerText();
             return;
         }
 
-        BigDecimal value = currentValue;
         if (value == null && settings.isZeroShownWhenNoValue) {
             value = BigDecimal.ZERO;
         }

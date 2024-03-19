@@ -36,12 +36,12 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-import java.math.BigDecimal;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.appcompat.content.res.AppCompatResources;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -74,6 +74,19 @@ public class CalcDialog extends AppCompatDialogFragment {
 
     private CharSequence[] errorMessages;
     private CalcDialogCallback calcDialogCallback;
+    private final CalcEraseButton.EraseListener onEraseListener = new CalcEraseButton.EraseListener() {
+        @Override
+        public void onErase() {
+            if (presenter != null) {
+                presenter.onErasedOnce();
+            }
+        }
+
+        @Override
+        public void onEraseAll() {
+            presenter.onErasedAll();
+        }
+    };
 
     public void setCalcDialogCallback(CalcDialogCallback calcDialogCallback) {
         this.calcDialogCallback = calcDialogCallback;
@@ -128,17 +141,16 @@ public class CalcDialog extends AppCompatDialogFragment {
 
         // Erase button
         CalcEraseButton eraseBtn = view.findViewById(R.id.calc_btn_erase);
-        eraseBtn.setOnEraseListener(new CalcEraseButton.EraseListener() {
-            @Override
-            public void onErase() {
-                if (presenter != null) {
-                    presenter.onErasedOnce();
-                }
-            }
+        eraseBtn.setOnEraseListener(onEraseListener);
 
+        CalcEraseButton backspaceBtn = view.findViewById(R.id.calc_btn_backspace);
+        backspaceBtn.setOnEraseListener(onEraseListener);
+
+        View percentBtn = view.findViewById(R.id.calc_btn_percent);
+        percentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onEraseAll() {
-                presenter.onErasedAll();
+            public void onClick(View view) {
+                presenter.onOperatorBtnClicked(Expression.Operator.PERCENT);
             }
         });
 
@@ -242,7 +254,7 @@ public class CalcDialog extends AppCompatDialogFragment {
         footerDividerView.setBackgroundColor(separatorColor);
 
         // Dialog buttons
-        Button clearBtn = view.findViewById(R.id.calc_btn_clear);
+        View clearBtn = view.findViewById(R.id.calc_btn_clear);
         clearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -435,6 +447,7 @@ public class CalcDialog extends AppCompatDialogFragment {
     public interface CalcDialogCallback {
         /**
          * Called when the dialog's OK button is clicked.
+         *
          * @param value       value entered. May be null if no value was entered, in this case,
          *                    it should be interpreted as zero or absent value.
          * @param requestCode dialog request code from {@link CalcSettings#getRequestCode()}.

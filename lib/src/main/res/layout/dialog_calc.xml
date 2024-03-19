@@ -195,6 +195,46 @@
         />
 
     <TextView
+        android:id="@+id/calc_btn_clear"
+        style="?attr/calcDigitBtnStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/calc_btn_11"
+        app:layout_constraintEnd_toStartOf="@id/calc_guideline_start"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calc_view_header_elevation"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        android:text="C" />
+
+    <com.maltaisn.calcdialog.CalcEraseButton
+        android:id="@+id/calc_btn_backspace"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="center"
+        android:src="@drawable/outline_backspace_24"
+        app:layout_constraintBottom_toTopOf="@id/calc_btn_11"
+        app:layout_constraintEnd_toStartOf="@+id/calc_btn_percent"
+        app:layout_constraintStart_toEndOf="@+id/calc_btn_clear"
+        app:layout_constraintTop_toBottomOf="@+id/calc_view_header_elevation"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <ImageView
+        android:id="@+id/calc_btn_percent"
+        style="?attr/calcDigitBtnStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="center"
+        android:src="@drawable/baseline_percent_24"
+        app:layout_constraintBottom_toTopOf="@id/calc_btn_11"
+        app:layout_constraintEnd_toStartOf="@+id/calc_guideline_end"
+        app:layout_constraintStart_toEndOf="@+id/calc_btn_backspace"
+        app:layout_constraintTop_toBottomOf="@+id/calc_view_header_elevation"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <TextView
         android:id="@+id/calc_btn_11"
         style="?attr/calcDigitBtnStyle"
         android:layout_width="0dp"
@@ -203,7 +243,7 @@
         app:layout_constraintEnd_toStartOf="@id/calc_guideline_start"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calc_view_header_background"
+        app:layout_constraintTop_toBottomOf="@id/calc_btn_clear"
         app:layout_constraintVertical_chainStyle="spread_inside"
         tools:text="7"
         />
@@ -267,9 +307,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/calc_guideline_end"
-        app:layout_constraintTop_toTopOf="@id/calc_btn_11"
-        tools:text="÷"
-        />
+        app:layout_constraintTop_toTopOf="@+id/calc_view_op_bg"
+        tools:text="÷" />
 
     <TextView
         android:id="@+id/calc_btn_mul"
@@ -340,27 +379,12 @@
         android:id="@+id/calc_view_footer_divider"
         android:layout_width="0dp"
         android:layout_height="1px"
-        app:layout_constraintBottom_toTopOf="@id/calc_btn_clear"
+        app:layout_constraintBottom_toTopOf="@id/calc_btn_cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/calc_btn_decimal"
         tools:background="?attr/calcDividerColor"
-        />
-
-    <Button
-        android:id="@+id/calc_btn_clear"
-        style="?calcDialogButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:text="?calcButtonTextClear"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calc_view_footer_divider"
         />
 
     <Button

@@ -53,14 +53,14 @@ class Expression implements Parcelable {
      */
     @NonNull
     BigDecimal evaluate(boolean priority, int scale, RoundingMode roundingMode) {
-        if (numbers.size() != operators.size() + 1) {
-            throw new IllegalStateException("Numbers and operators aren't balanced.");
-        }
-
         if (numbers.size() == 1) return numbers.get(0);
 
         List<BigDecimal> nbs = new ArrayList<>(numbers);
         List<Operator> ops = new ArrayList<>(operators);
+
+        if (nbs.size() != ops.size() + 1) {
+            ops.remove(ops.size()-1);
+        }
 
         if (priority) {
             // Evaluate products and quotients
@@ -159,7 +159,7 @@ class Expression implements Parcelable {
     };
 
     enum Operator {
-        ADD('+'), SUBTRACT('−'), MULTIPLY('×'), DIVIDE('÷');
+        ADD('+'), SUBTRACT('−'), MULTIPLY('×'), DIVIDE('÷'), PERCENT('%');
 
         char symbol;
 
