@@ -18,7 +18,6 @@ package com.maltaisn.calcdialog;
 
 import static com.maltaisn.calcdialog.Expression.Operator.PERCENT;
 
-import android.health.connect.datatypes.units.Percentage;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
