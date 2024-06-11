@@ -16,6 +16,9 @@
 
 package com.maltaisn.calcdialog;
 
+import static com.maltaisn.calcdialog.Expression.Operator.PERCENT;
+
+import android.health.connect.datatypes.units.Percentage;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -205,6 +208,10 @@ class CalcPresenter {
     }
 
     void onDigitBtnClicked(int digit) {
+        Expression.Operator lastOperator = getLastOperator();
+        if (lastOperator == PERCENT && currentValue != null) {
+            canEditExpression = true;
+        }
         clearExpressionIfNeeded();
         dismissOldValue();
 
@@ -227,6 +234,13 @@ class CalcPresenter {
         updateCurrentValue();
     }
 
+    Expression.Operator getLastOperator() {
+        if (expression.operators.isEmpty()) {
+            return null;
+        }
+        return expression.operators.get(expression.operators.size() - 1);
+    }
+
     void onOperatorBtnClicked(@NonNull Expression.Operator operator) {
         clearExpressionIfNeeded();
         if (dismissError()) return;
@@ -234,52 +248,31 @@ class CalcPresenter {
         currentIsResult = false;
         currentValueScale = -1;
 
-        if (operator == Expression.Operator.PERCENT) {
-            if (currentValue != null) {
-                if (!expression.operators.isEmpty() && !expression.numbers.isEmpty()) {
-                    Expression.Operator lastOperator = expression.operators.get(expression.operators.size() - 1);
-                    BigDecimal last = currentValue;
-                    calculate();
+        Expression.Operator lastOperator = getLastOperator();
+        if (lastOperator == PERCENT && currentValue != null) {
+            return;
+        }
 
-                    switch (lastOperator) {
-                        case ADD:
-                            currentValue = currentValue.add(last.multiply(currentValue.divide(BigDecimal.valueOf(100), scale(), rm())));
-                            break;
-                        case SUBTRACT:
-                            currentValue = currentValue.subtract(currentValue.multiply(last.divide(BigDecimal.valueOf(100), scale(), rm())));
-                            break;
-                        case MULTIPLY:
-                            currentValue = last.multiply(currentValue.divide(BigDecimal.valueOf(100), scale(), rm()));
-                            break;
-                        case DIVIDE:
-                            currentValue = currentValue.divide(last.divide(BigDecimal.valueOf(100), scale(), rm()), scale(), rm());
-                            break;
-                    }
-                } else {
-                    currentValue = currentValue.divide(BigDecimal.valueOf(100), scale(), rm());
-                }
+        if (operator == PERCENT && currentValue != null) {
+            expression.numbers.add(currentValue);
+            expression.operators.add(operator);
+            canEditExpression = true;
+            updateExpression();
+            return;
+        }
 
-                canEditCurrentValue = true;
-                canEditExpression = false;
-                clearExpressionIfNeeded();
-                updateCurrentValue();
-                onEqualBtnClicked();
-                return;
-            }
+        if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
+            expression.operators.set(expression.operators.size() - 1, operator);
         } else {
-            if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
-                expression.operators.set(expression.operators.size() - 1, operator);
-            } else {
-                if (currentValue == null) {
-                    currentValue = BigDecimal.ZERO;
-                }
-                expression.numbers.add(currentValue);
-                calculate();
-                expression.operators.add(operator);
+            if (currentValue == null) {
+                currentValue = BigDecimal.ZERO;
+            }
+            expression.numbers.add(currentValue);
+            calculate();
+            expression.operators.add(operator);
 
-                if (!settings.shouldEvaluateOnOperation) {
-                    currentValue = null;
-                }
+            if (!settings.shouldEvaluateOnOperation) {
+                currentValue = null;
             }
         }
 
@@ -467,14 +460,19 @@ class CalcPresenter {
     }
 
     private void equal() {
+        Expression.Operator lastOperator = getLastOperator();
         if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
-            // Remove unused last operator
-            expression.operators.remove(expression.operators.size() - 1);
+            if (lastOperator != PERCENT) {
+                // Remove unused last operator
+                expression.operators.remove(expression.operators.size() - 1);
+            }
         } else {
             if (currentValue == null) {
                 currentValue = BigDecimal.ZERO;
             }
-            expression.numbers.add(currentValue);
+            if (lastOperator != PERCENT) {
+                expression.numbers.add(currentValue);
+            }
         }
 
         calculate();

@@ -62,21 +62,40 @@ class Expression implements Parcelable {
             ops.remove(ops.size()-1);
         }
 
+        //get just percent operation
+        Operator firstOp = ops.get(0);
+        if (firstOp == Operator.PERCENT) {
+            BigDecimal n1 = nbs.get(0);
+            BigDecimal n2 = nbs.remove(1);
+            nbs.set(0, n1.multiply(n2.divide(BigDecimal.valueOf(100), scale, roundingMode)));
+
+            return nbs.remove(0).stripTrailingZeros();
+        }
+
         if (priority) {
             // Evaluate products and quotients
             int i = 0;
-            while (i < ops.size()) {
+            int opsCount = ops.size();
+            while (i < opsCount) {
                 Operator op = ops.get(i);
+                boolean nextOpIsPercent = false;
+                //if we have next operator = percent
+                if (opsCount - 1 > i) {
+                    Operator nextOp = ops.get(i + 1);
+                    nextOpIsPercent = nextOp == Operator.PERCENT;
+                }
                 if (op == Operator.MULTIPLY) {
                     ops.remove(i);
                     BigDecimal n1 = nbs.get(i);
                     BigDecimal n2 = nbs.remove(i + 1);
-                    nbs.set(i, n1.multiply(n2));
+                    BigDecimal n3 = nextOpIsPercent ? n2.divide(BigDecimal.valueOf(100), scale, roundingMode) : n2;
+                    nbs.set(i, n1.multiply(n3));
                 } else if (op == Operator.DIVIDE) {
                     ops.remove(i);
                     BigDecimal n1 = nbs.get(i);
                     BigDecimal n2 = nbs.remove(i + 1);
-                    nbs.set(i, n1.divide(n2, scale, roundingMode));
+                    BigDecimal n3 = nextOpIsPercent ? n2.divide(BigDecimal.valueOf(100), scale, roundingMode) : n2;
+                    nbs.set(i, n1.divide(n3, scale, roundingMode));
                 } else {
                     i++;
                 }
@@ -86,16 +105,23 @@ class Expression implements Parcelable {
         // Evaluate the rest
         while (!ops.isEmpty()) {
             Operator op = ops.remove(0);
+            boolean nextOpIsPercent = false;
+            //if we have next operator = percent
+            if (!ops.isEmpty()) {
+                Operator nextOp = ops.get(0);
+                nextOpIsPercent = nextOp == Operator.PERCENT;
+            }
             BigDecimal n1 = nbs.get(0);
             BigDecimal n2 = nbs.remove(1);
+            BigDecimal n3 = nextOpIsPercent ? n2.divide(BigDecimal.valueOf(100), scale, roundingMode) : n2;
             if (op == Operator.ADD) {
-                nbs.set(0, n1.add(n2));
+                nbs.set(0, n1.add(n3));
             } else if (op == Operator.SUBTRACT) {
-                nbs.set(0, n1.subtract(n2));
+                nbs.set(0, n1.subtract(n3));
             } else if (op == Operator.MULTIPLY) {
-                nbs.set(0, n1.multiply(n2));
+                nbs.set(0, n1.multiply(n3));
             } else {
-                nbs.set(0, n1.divide(n2, scale, roundingMode));
+                nbs.set(0, n1.divide(n3, scale, roundingMode));
             }
         }
 
