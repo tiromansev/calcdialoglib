@@ -247,16 +247,12 @@ class CalcPresenter {
         currentIsResult = false;
         currentValueScale = -1;
 
-        Expression.Operator lastOperator = getLastOperator();
-        if (lastOperator == PERCENT && currentValue != null) {
-            return;
-        }
-
         if (operator == PERCENT && currentValue != null) {
             expression.numbers.add(currentValue);
             expression.operators.add(operator);
             canEditExpression = true;
             updateExpression();
+            currentValue = null;
             return;
         }
 
@@ -469,7 +465,8 @@ class CalcPresenter {
             if (currentValue == null) {
                 currentValue = BigDecimal.ZERO;
             }
-            if (lastOperator != PERCENT) {
+            boolean lastOperatorIsPercent = lastOperator == PERCENT && expression.operators.size() > 1;
+            if (!lastOperatorIsPercent) {
                 expression.numbers.add(currentValue);
             }
         }

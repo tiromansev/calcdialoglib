@@ -57,14 +57,15 @@ class Expression implements Parcelable {
 
         List<BigDecimal> nbs = new ArrayList<>(numbers);
         List<Operator> ops = new ArrayList<>(operators);
+        boolean lastOpIsPercent = !ops.isEmpty() && ops.get(ops.size()-1) == Operator.PERCENT;
+        boolean firstOpIsPercent = !ops.isEmpty() && ops.get(0) == Operator.PERCENT;
 
         if (nbs.size() != ops.size() + 1) {
             ops.remove(ops.size()-1);
         }
 
         //get just percent operation
-        Operator firstOp = ops.get(0);
-        if (firstOp == Operator.PERCENT) {
+        if (firstOpIsPercent) {
             BigDecimal n1 = nbs.get(0);
             BigDecimal n2 = nbs.remove(1);
             nbs.set(0, n1.multiply(n2.divide(BigDecimal.valueOf(100), scale, roundingMode)));
@@ -110,10 +111,12 @@ class Expression implements Parcelable {
             if (!ops.isEmpty()) {
                 Operator nextOp = ops.get(0);
                 nextOpIsPercent = nextOp == Operator.PERCENT;
+            } else {
+                nextOpIsPercent = lastOpIsPercent;
             }
             BigDecimal n1 = nbs.get(0);
             BigDecimal n2 = nbs.remove(1);
-            BigDecimal n3 = nextOpIsPercent ? n2.divide(BigDecimal.valueOf(100), scale, roundingMode) : n2;
+            BigDecimal n3 = nextOpIsPercent ? n1.multiply(n2.divide(BigDecimal.valueOf(100), scale, roundingMode)) : n2;
             if (op == Operator.ADD) {
                 nbs.set(0, n1.add(n3));
             } else if (op == Operator.SUBTRACT) {
