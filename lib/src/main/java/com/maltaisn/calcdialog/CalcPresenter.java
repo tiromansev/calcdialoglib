@@ -247,15 +247,6 @@ class CalcPresenter {
         currentIsResult = false;
         currentValueScale = -1;
 
-        if (operator == PERCENT && currentValue != null) {
-            expression.numbers.add(currentValue);
-            expression.operators.add(operator);
-            canEditExpression = true;
-            updateExpression();
-            currentValue = null;
-            return;
-        }
-
         if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
             expression.operators.set(expression.operators.size() - 1, operator);
         } else {
