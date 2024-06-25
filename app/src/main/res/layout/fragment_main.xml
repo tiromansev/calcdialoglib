@@ -214,7 +214,7 @@
                         style="@style/OptionsCheckboxStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:checked="true"
+                        android:checked="false"
                         android:text="@string/calc_eval_operation"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

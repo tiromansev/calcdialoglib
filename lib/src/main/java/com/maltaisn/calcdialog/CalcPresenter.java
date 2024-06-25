@@ -19,6 +19,7 @@ package com.maltaisn.calcdialog;
 import static com.maltaisn.calcdialog.Expression.Operator.PERCENT;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -247,8 +248,13 @@ class CalcPresenter {
         currentIsResult = false;
         currentValueScale = -1;
 
+        Log.d("test", "onOperatorBtnClicked: " +expression + " new op " + operator);
         if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
-            expression.operators.set(expression.operators.size() - 1, operator);
+            if (expression.operators.get(expression.operators.size()-1) == PERCENT){
+                expression.operators.add(operator);
+            }else {
+                expression.operators.set(expression.operators.size() - 1, operator);
+            }
         } else {
             if (currentValue == null) {
                 currentValue = BigDecimal.ZERO;

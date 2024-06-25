@@ -32,7 +32,8 @@ class Expression implements Parcelable {
     final List<BigDecimal> numbers = new ArrayList<>();
     final List<Operator> operators = new ArrayList<>();
 
-    Expression() {}
+    Expression() {
+    }
 
     void clear() {
         numbers.clear();
@@ -45,6 +46,7 @@ class Expression implements Parcelable {
 
     /**
      * Evaluate the expression and return the result.
+     *
      * @param priority     Whether to apply operation priority or not.
      * @param scale        Scale used for division.
      * @param roundingMode Rounding mode used for division.
@@ -59,7 +61,9 @@ class Expression implements Parcelable {
         List<Operator> ops = new ArrayList<>(operators);
 
         if (nbs.size() != ops.size() + 1) {
-            ops.remove(ops.size()-1);
+            if (!ops.contains(Operator.PERCENT)) {
+                //ops.remove(ops.size()-1);
+            }
         }
 
         if (priority) {
@@ -68,50 +72,117 @@ class Expression implements Parcelable {
             while (i < ops.size()) {
                 Operator op = ops.get(i);
                 if (op == Operator.MULTIPLY) {
-                    ops.remove(i);
+
                     BigDecimal n1 = nbs.get(i);
                     BigDecimal n2 = nbs.remove(i + 1);
-                    nbs.set(i, n1.multiply(n2));
+
+                    Operator nextOp = null;
+                    if (i + 1 < ops.size()) {
+                        nextOp = ops.get(i + 1);
+                    }
+
+                    ops.remove(i);
+
+                    if (nextOp == Operator.PERCENT) {
+                        BigDecimal result = n2.divide(BigDecimal.valueOf(100), scale, roundingMode);
+                        nbs.set(i, n1.multiply(result));
+                        ops.remove(nextOp);
+                    } else {
+                        nbs.set(i, n1.multiply(n2));
+                    }
+
                 } else if (op == Operator.DIVIDE) {
                     ops.remove(i);
                     BigDecimal n1 = nbs.get(i);
                     BigDecimal n2 = nbs.remove(i + 1);
                     nbs.set(i, n1.divide(n2, scale, roundingMode));
-                } else if (op == Operator.PERCENT) {
+                } /*else if (op == Operator.PERCENT) {
+                    Operator prevOp = null;
+                    Operator nextOp = null;
+                    if (i - 1 < ops.size()) {
+                        prevOp = ops.get(i - 1);
+                    } else if (i + 1 < ops.size()) {
+                        nextOp = ops.get(i + 1);
+                    }
+
                     ops.remove(i);
-                    BigDecimal n1 = nbs.get(i);
-                    BigDecimal n2 = nbs.remove(i + 1);
-                    BigDecimal percentValue = n2.divide(BigDecimal.valueOf(100), scale, roundingMode);
-                    nbs.set(i, n1.multiply(percentValue));
-                } else {
+                    if (nextOp == Operator.MULTIPLY || nextOp == Operator.DIVIDE) {
+                        BigDecimal n1 = nbs.get(i);
+                        BigDecimal n2 = nbs.remove(i + 1);
+                        BigDecimal result = n2.divide(BigDecimal.valueOf(100), scale, roundingMode);
+                        if (nextOp == Operator.MULTIPLY) {
+                            nbs.set(i, n1.multiply(result));
+                        } else {
+                            nbs.set(i, n1.divide(result, scale, roundingMode));
+                        }
+                        //ops.remove(i);
+                        ops.remove(nextOp);
+                        nbs.remove(i + 1);
+                    } else {
+                        BigDecimal n1 = nbs.get(i - 1);
+                        BigDecimal n2 = nbs.get(i);
+                        if (prevOp == Operator.ADD) {
+                            BigDecimal result = n1.multiply(n2).divide(BigDecimal.valueOf(100), scale, roundingMode);
+                            nbs.set(i, n1.add(result));
+                            ops.remove(prevOp);
+                            nbs.remove(i - 1);
+                        } else if (prevOp == Operator.SUBTRACT){
+
+                        } else if (prevOp ==  Operator.MULTIPLY)  {
+
+                        } else if (prevOp == Operator.DIVIDE) {
+
+                        }
+                    }
+
+                }*/ else {
                     i++;
                 }
             }
         }
 
         // Evaluate the rest
-        while (!ops.isEmpty()) {
-            Operator op = ops.remove(0);
-            boolean nextOpIsPercent = false;
-            //if we have next operator = percent
-            if (ops.size() - 1 > 1) {
-                Operator nextOp = ops.get(0);
-                nextOpIsPercent = nextOp == Operator.PERCENT;
-                if (nextOpIsPercent) {
-                    ops.remove(0);
-                }
+        while (!ops.isEmpty() /*&& nbs.size() > 1*/) {
+            Operator op = ops.get(0);
+
+            Operator nextOp = null;
+            if (1 < ops.size()) {
+                nextOp = ops.get(1);
             }
+
+            ops.remove(0);
+
             BigDecimal n1 = nbs.get(0);
-            BigDecimal n2 = nbs.remove(1);
-            BigDecimal n3 = nextOpIsPercent ? n1.multiply(n2.divide(BigDecimal.valueOf(100), scale, roundingMode)) : n2;
+            BigDecimal n2 = nbs.get(1);
+
+            if (op != Operator.PERCENT) {
+                nbs.remove(1);
+            }
+
             if (op == Operator.ADD) {
-                nbs.set(0, n1.add(n3));
+                if (nextOp == Operator.PERCENT) {
+                    BigDecimal result = n1.multiply(n2).divide(BigDecimal.valueOf(100), scale, roundingMode);
+                    nbs.set(0, n1.add(result));
+                    ops.remove(0);
+                } else {
+                    nbs.set(0, n1.add(n2));
+                }
+
             } else if (op == Operator.SUBTRACT) {
-                nbs.set(0, n1.subtract(n3));
+                if (nextOp == Operator.PERCENT) {
+                    BigDecimal result = n1.multiply(n2).divide(BigDecimal.valueOf(100), scale, roundingMode);
+                    nbs.set(0, n1.subtract(result));
+                    ops.remove(0);
+                } else {
+                    nbs.set(0, n1.subtract(n2));
+                }
             } else if (op == Operator.MULTIPLY) {
-                nbs.set(0, n1.multiply(n3));
+                nbs.set(0, n1.multiply(n2));
+            } else if (op == Operator.PERCENT) {
+                BigDecimal result = n1.divide(BigDecimal.valueOf(100), scale, roundingMode);
+                nbs.set(0, result);
             } else {
-                nbs.set(0, n1.divide(n3, scale, roundingMode));
+                nbs.set(0, n1.divide(n2, scale, roundingMode));
             }
         }
 
@@ -120,18 +191,33 @@ class Expression implements Parcelable {
 
     /**
      * Format the expression to a string.
+     *
      * @param nbFormat The format to use for formatting numbers.
      * @return The expression string.
      */
     String format(NumberFormat nbFormat) {
         StringBuilder sb = new StringBuilder();
+
+        int opsIndex = 0;
         for (int i = 0; i < numbers.size(); i++) {
             sb.append(nbFormat.format(numbers.get(i)));
             sb.append(' ');
-            if (i < operators.size()) {
-                sb.append(operators.get(i).symbol);
+
+            if (opsIndex < operators.size()) {
+                Operator operator = operators.get(opsIndex);
+                sb.append(operator.symbol);
+                sb.append(' ');
+
+                if (operator == Operator.PERCENT) {
+                    int nextOpIndex = opsIndex + 1;
+                    if (nextOpIndex < operators.size()) {
+                        sb.append(operators.get(nextOpIndex).symbol);
+                        sb.append(' ');
+                        opsIndex++;
+                    }
+                }
+                opsIndex++;
             }
-            sb.append(' ');
         }
         if (sb.length() != 0) {
             sb.deleteCharAt(sb.length() - 1);
