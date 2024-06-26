@@ -183,7 +183,7 @@ public class ExpressionTest {
         expr.numbers.add(new BigDecimal("50"));
         expr.operators.add(Expression.Operator.PERCENT);
 
-        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        BigDecimal result1 = expr.evaluate(true, 1, RoundingMode.HALF_UP);
         assertEquals(new BigDecimal("0.5"), result1);
     }
 
@@ -472,5 +472,26 @@ public class ExpressionTest {
 
         BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
         assertEquals(new BigDecimal("0.20833334"), result1);
+    }
+
+    @Test
+    public void percentTest26() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("40"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.MULTIPLY);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.SUBTRACT);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("51.164"), result1);
     }
 }
