@@ -92,21 +92,48 @@ class Expression implements Parcelable {
                     }
 
                 } else if (op == Operator.DIVIDE) {
-                    ops.remove(i);
                     BigDecimal n1 = nbs.get(i);
                     BigDecimal n2 = nbs.remove(i + 1);
-                    nbs.set(i, n1.divide(n2, scale, roundingMode));
-                } /*else if (op == Operator.PERCENT) {
-                    Operator prevOp = null;
+
                     Operator nextOp = null;
-                    if (i - 1 < ops.size()) {
-                        prevOp = ops.get(i - 1);
-                    } else if (i + 1 < ops.size()) {
+                    if (i + 1 < ops.size()) {
                         nextOp = ops.get(i + 1);
                     }
 
                     ops.remove(i);
+
+                    if (nextOp == Operator.PERCENT) {
+                        BigDecimal result = n2.divide(BigDecimal.valueOf(100), scale, roundingMode);
+                        nbs.set(i, n1.divide(result, scale, roundingMode));
+                        ops.remove(nextOp);
+                    } else {
+                        nbs.set(i, n1.divide(n2, scale, roundingMode));
+                    }
+                } /*else if (op == Operator.PERCENT) {
+                    ops.remove(i);
+                    BigDecimal n1 = nbs.get(i);
+                    BigDecimal result = n1.divide(BigDecimal.valueOf(100), scale, roundingMode);
+                    nbs.set(i, result);
+                }*/ else if (op == Operator.PERCENT) {
+                    if (i == 0){
+                        BigDecimal n1 = nbs.get(i);
+                        BigDecimal result = n1.divide(BigDecimal.valueOf(100), scale, roundingMode);
+                        nbs.set(0, result);
+                        ops.remove(i);
+                        continue;
+                    }
+
+                    Operator prevOp = null;
+                    Operator nextOp = null;
+                    if (i - 1 >= 0 && i - 1 < ops.size()) {
+                        prevOp = ops.get(i - 1);
+                    }
+                    if (i + 1 < ops.size()) {
+                        nextOp = ops.get(i + 1);
+                    }
+
                     if (nextOp == Operator.MULTIPLY || nextOp == Operator.DIVIDE) {
+                        ops.remove(i);
                         BigDecimal n1 = nbs.get(i);
                         BigDecimal n2 = nbs.remove(i + 1);
                         BigDecimal result = n2.divide(BigDecimal.valueOf(100), scale, roundingMode);
@@ -117,25 +144,26 @@ class Expression implements Parcelable {
                         }
                         //ops.remove(i);
                         ops.remove(nextOp);
-                        nbs.remove(i + 1);
-                    } else {
+                        //nbs.remove(i + 1);
+                    } else if (prevOp == Operator.MULTIPLY || prevOp == Operator.DIVIDE) {
+                        ops.remove(i);
                         BigDecimal n1 = nbs.get(i - 1);
                         BigDecimal n2 = nbs.get(i);
-                        if (prevOp == Operator.ADD) {
+                        if (prevOp == Operator.MULTIPLY) {
                             BigDecimal result = n1.multiply(n2).divide(BigDecimal.valueOf(100), scale, roundingMode);
                             nbs.set(i, n1.add(result));
                             ops.remove(prevOp);
-                            nbs.remove(i - 1);
-                        } else if (prevOp == Operator.SUBTRACT){
-
-                        } else if (prevOp ==  Operator.MULTIPLY)  {
-
-                        } else if (prevOp == Operator.DIVIDE) {
-
+                            //nbs.remove(i - 1);
+                        } else {
+                            BigDecimal result = n2.multiply(n1).divide(BigDecimal.valueOf(100), scale, roundingMode);
+                            nbs.set(i, n1.add(result));
+                            ops.remove(prevOp);
                         }
+                    } else {
+                        i++;
                     }
 
-                }*/ else {
+                } else {
                     i++;
                 }
             }
@@ -178,10 +206,10 @@ class Expression implements Parcelable {
                 }
             } else if (op == Operator.MULTIPLY) {
                 nbs.set(0, n1.multiply(n2));
-            } else if (op == Operator.PERCENT) {
+            }/* else if (op == Operator.PERCENT) {
                 BigDecimal result = n1.divide(BigDecimal.valueOf(100), scale, roundingMode);
                 nbs.set(0, result);
-            } else {
+            }*/ else {
                 nbs.set(0, n1.divide(n2, scale, roundingMode));
             }
         }

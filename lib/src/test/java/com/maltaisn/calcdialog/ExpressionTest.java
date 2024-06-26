@@ -338,4 +338,139 @@ public class ExpressionTest {
         BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
         assertEquals(new BigDecimal("1.2"), result1);
     }
+
+    @Test
+    public void percentTest18() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("40"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.MULTIPLY);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("53.2"), result1);
+    }
+
+    @Test
+    public void percentTest19() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("40"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.MULTIPLY);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+        expr.operators.add(Expression.Operator.MULTIPLY);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("9.7"), result1);
+    }
+
+    @Test
+    public void percentTest20() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("40"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.MULTIPLY);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+        expr.operators.add(Expression.Operator.MULTIPLY);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+        expr.operators.add(Expression.Operator.PERCENT);
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("7.854"), result1);
+    }
+
+    @Test
+    public void percentTest21() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("20"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("3"));
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("13.33333333").toPlainString(), result1.toPlainString());
+    }
+
+    @Test
+    public void percentTest22() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("10"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("20"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.PERCENT);
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("1").toPlainString(), result1.toPlainString());
+    }
+
+    @Test
+    public void percentTest23() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("10"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("20"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("30"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("40"));
+        expr.operators.add(Expression.Operator.PERCENT);
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("4.16666668").toPlainString(), result1.toPlainString());
+    }
+
+    @Test
+    public void percentTest24() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("2"));
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("0.08333334"), result1);
+    }
+
+    @Test
+    public void percentTest25() {
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("50"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("40"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("2"));
+
+        BigDecimal result1 = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("0.20833334"), result1);
+    }
 }
