@@ -16,6 +16,7 @@
 
 package com.maltaisn.calcdialog;
 
+import static com.maltaisn.calcdialog.Expression.Operator.MULTIPLY;
 import static com.maltaisn.calcdialog.Expression.Operator.PERCENT;
 
 import android.os.Bundle;
@@ -211,6 +212,9 @@ class CalcPresenter {
         Expression.Operator lastOperator = getLastOperator();
         if (lastOperator == PERCENT && currentValue != null) {
             canEditExpression = true;
+        }
+        if (lastOperator == PERCENT){
+            expression.operators.add(MULTIPLY);
         }
         clearExpressionIfNeeded();
         dismissOldValue();
