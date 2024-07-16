@@ -20,3 +20,12 @@ dependencies {
     testImplementation "junit:junit:4.13.2"
 }
 
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier.set("sources")
+}
+
+artifacts {
+    archives sourcesJar
+}
+
