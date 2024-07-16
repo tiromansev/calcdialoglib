@@ -10,6 +10,14 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
