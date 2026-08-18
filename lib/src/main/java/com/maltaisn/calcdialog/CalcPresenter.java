@@ -20,7 +20,6 @@ import static com.maltaisn.calcdialog.Expression.Operator.MULTIPLY;
 import static com.maltaisn.calcdialog.Expression.Operator.PERCENT;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -252,7 +251,6 @@ class CalcPresenter {
         currentIsResult = false;
         currentValueScale = -1;
 
-        Log.d("test", "onOperatorBtnClicked: " +expression + " new op " + operator);
         if (!currentIsAnswer && !canEditCurrentValue && !expression.operators.isEmpty()) {
             if (expression.operators.get(expression.operators.size()-1) == PERCENT){
                 expression.operators.add(operator);
@@ -447,6 +445,11 @@ class CalcPresenter {
         } catch (ArithmeticException e) {
             // Division by zero occurred.
             setError(ERROR_DIV_ZERO);
+            return;
+        } catch (IndexOutOfBoundsException e) {
+            // Malformed expression state; never crash the host app over it.
+            reset();
+            updateExpression();
             return;
         }
 

@@ -475,6 +475,68 @@ public class ExpressionTest {
     }
 
     @Test
+    public void percentBeforeDivideRegression() {
+        // Crash regression: "1 + 2 % + 3 ÷ 4" threw IndexOutOfBoundsException because
+        // the priority pass indexed numbers with the operator index after skipping
+        // an additive percent.
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("1"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("4"));
+
+        BigDecimal result = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("1.77"), result);
+    }
+
+    @Test
+    public void percentBeforeMultiplyRegression() {
+        // Same shape as percentBeforeDivideRegression but with ×: "10 − 20 % + 3 × 4".
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("10"));
+        expr.operators.add(Expression.Operator.SUBTRACT);
+        expr.numbers.add(new BigDecimal("20"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("3"));
+        expr.operators.add(Expression.Operator.MULTIPLY);
+        expr.numbers.add(new BigDecimal("4"));
+
+        BigDecimal result = expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        assertEquals(new BigDecimal("20").toPlainString(), result.toPlainString());
+    }
+
+    @Test
+    public void malformedExpressionDoesNotThrow() {
+        // Degenerate operator sequences (double percents, dangling operators) must
+        // never throw, whatever value they produce.
+        Expression expr = new Expression();
+        expr.numbers.add(new BigDecimal("1"));
+        expr.operators.add(Expression.Operator.ADD);
+        expr.numbers.add(new BigDecimal("2"));
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.PERCENT);
+        expr.operators.add(Expression.Operator.DIVIDE);
+        expr.numbers.add(new BigDecimal("3"));
+
+        expr.evaluate(true, 8, RoundingMode.HALF_UP);
+        expr.evaluate(false, 8, RoundingMode.HALF_UP);
+
+        Expression expr2 = new Expression();
+        expr2.numbers.add(new BigDecimal("5"));
+        expr2.operators.add(Expression.Operator.DIVIDE);
+        expr2.numbers.add(new BigDecimal("2"));
+        expr2.operators.add(Expression.Operator.DIVIDE);
+
+        expr2.evaluate(true, 8, RoundingMode.HALF_UP);
+        expr2.evaluate(false, 8, RoundingMode.HALF_UP);
+    }
+
+    @Test
     public void percentTest26() {
         Expression expr = new Expression();
         expr.numbers.add(new BigDecimal("50"));
